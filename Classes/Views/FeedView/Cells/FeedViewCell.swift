@@ -7,12 +7,7 @@
 //
 
 import UIKit
-import ParseUI
-import Parse
-
-protocol UserSelectionDelegate{
-  func didSelectUser(user : PFUser)
-}
+import CoreLocation
 
 protocol LocationSelectionDelegate{
   func didSelectLocation(coordinates : CLLocationCoordinate2D)
@@ -20,11 +15,10 @@ protocol LocationSelectionDelegate{
 
 class FeedViewCell: UITableViewCell {
   
-  @IBOutlet weak var userIconView: PFImageView!
-  @IBOutlet weak var userNameButton: UserNameButton!
+  @IBOutlet weak var userIconView: UIImageView!
   @IBOutlet weak var dateLabel: UILabel!
   
-  @IBOutlet weak var postImageView: PFImageView!
+  @IBOutlet weak var postImageView: UIImageView!
   @IBOutlet weak var descriptionLabel: UILabel!
   
   @IBOutlet weak var locationIconView: UIImageView!
@@ -32,7 +26,6 @@ class FeedViewCell: UITableViewCell {
   
   @IBOutlet weak var circleProgressView: CircleProgressView!
   
-  var delegate : UserSelectionDelegate?
   var locationDelegate : LocationSelectionDelegate?
   
   override func awakeFromNib() {
@@ -48,16 +41,9 @@ class FeedViewCell: UITableViewCell {
   
   func setToPost(post : PostObject){
     
-    userNameButton.tintColor = AppStyle.Color.MainTintColor
     userIconView.layer.masksToBounds = true
     userIconView.layer.cornerRadius = userIconView.frame.height/2
     
-    post.author.fetchInBackgroundWithBlock { (user, error) in
-      self.userNameButton.setTitle(post.author.username
-, forState: .Normal)
-      self.userIconView.file = post.author["profileImageFile"] as? PFFile
-      self.userIconView.loadInBackground()
-    }
     
     descriptionLabel.text = post.text
     
@@ -72,32 +58,10 @@ class FeedViewCell: UITableViewCell {
     
     if let img = post.image{
       postImageView.image = img
-    } else if let file = post.imageFile{
-      postImageView.file = file
-      print(file.url)
-      postImageView.loadInBackground({ (image, error) in
-        
-        }, progressBlock: { (progress) in
-          //print(progress)
-          if progress == 100{
-            self.circleProgressView.hidden = true
-          }else{
-            self.circleProgressView.setProgress(Double(progress)/100, animated: false)
-          }
-      })
     }
   }
   
-  @IBAction func userNamePressed(sender: AnyObject) {
-    let q = PFQuery(className: "_User")
-    print(userNameButton.titleLabel!.text!)
-    q.whereKey("username", equalTo: userNameButton.titleLabel!.text!)
-    q.getFirstObjectInBackgroundWithBlock { (user , error) in
-      if let user = user as? PFUser{
-        self.delegate?.didSelectUser(user)
-      }
-    }
-  }
+  
   
   @IBAction func locationPressed(sender: AnyObject) {
     let title = locationButton.titleForState(.Normal)
@@ -111,8 +75,4 @@ class FeedViewCell: UITableViewCell {
     
     
   }
-}
-
-class UserNameButton : UIButton{
-  var user : PFUser?
 }

@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Parse
 
 class Presenter{
   
@@ -35,10 +34,6 @@ class Presenter{
     vc.allowsEditing = true
     vc.delegate = delegate
     presenter.presentViewController(vc, animated: true, completion: nil)
-  }
-  
-  func showUserProfile(user: PFUser, presenter : UIViewController){
-    
   }
 }
 

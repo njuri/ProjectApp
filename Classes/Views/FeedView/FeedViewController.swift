@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import Parse
 import MapKit
 
-class FeedViewController: UIViewController, UserSelectionDelegate, LocationSelectionDelegate {
+class FeedViewController: UIViewController, LocationSelectionDelegate {
   
   @IBOutlet weak var addButton: UIBarButtonItem!
   @IBOutlet weak var tableView: UITableView!
@@ -55,21 +54,7 @@ class FeedViewController: UIViewController, UserSelectionDelegate, LocationSelec
     
     posts.removeAll()
     
-    if let user = PFUser.currentUser(){
-      FeedClient.downloadPostsForUser(user, forProfile: false) { (objects, error) in
-        if let objects = objects where error == nil{
-          
-          self.posts = objects.sort{ $0.createdAt?.compare($1.createdAt!) == .OrderedDescending}
-          self.tableView.reloadData()
-          self.emptyViewIcon.hidden = false
-          self.emptyViewIndicator.stopAnimating()
-          self.emptyViewLabel.text = "Feed is empty"
-          
-        }else{
-          print(error?.localizedDescription)
-        }
-      }
-    }
+
   }
   
   func showTintView(){
@@ -122,11 +107,7 @@ class FeedViewController: UIViewController, UserSelectionDelegate, LocationSelec
     presentViewController(nc, animated: true, completion: nil)
   }
   
-  func didSelectUser(user: PFUser) {
-    let vc = UserProfileViewController(nibName:"UserProfileViewController", bundle:nil)
-    vc.user = user
-    navigationController?.pushViewController(vc, animated: true)
-  }
+
   
 }
 
@@ -145,7 +126,6 @@ extension FeedViewController : UITableViewDataSource{
     let cell = tableView.dequeueReusableCellWithIdentifier("FeedViewCell") as! FeedViewCell
     let post = posts[indexPath.row]
     cell.setToPost(post)
-    cell.delegate = self
     cell.locationDelegate = self
     return cell
   }

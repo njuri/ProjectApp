@@ -7,19 +7,9 @@
 //
 
 import UIKit
-import Parse
 
 class SettingsObject {
-  var currentUser = UserObject(userID:"",profileImage: UIImage(named: "leo.jpg"),username: "njuri"){
-    didSet{
-      if let user = PFUser.currentUser(){
-        let file = PFFile(data: UIImageJPEGRepresentation(SettingsObject.resizeImage(currentUser.profileImage!, newSize: CGSize(width: 70,height: 70)), 0.3)!)
-        user["profileImageFile"] = file
-        user.username = currentUser.username
-        user.saveInBackground()
-      }
-    }
-  }
+  var currentUser = UserObject(userID:"",profileImage: UIImage(named: "leo.jpg"),username: "njuri")
   
   class func resizeImage(image: UIImage, newSize: CGSize) -> (UIImage) {
     let newRect = CGRectIntegral(CGRectMake(0,0, newSize.width, newSize.height))
@@ -96,13 +86,6 @@ extension ProfileViewController : UITableViewDataSource{
     cell.profileImageView.layer.masksToBounds = true
     cell.profileImageView.layer.cornerRadius = cell.profileImageView.frame.height/2
     
-    PFUser.currentUser()!.fetchInBackgroundWithBlock { (user, error) in
-      if let user = user as? PFUser{
-        cell.userNameField.text = user.username
-        cell.profileImageView.file = user["profileImageFile"] as? PFFile
-        cell.profileImageView.loadInBackground()
-      }
-    }
     
     mainCell = cell
     return cell

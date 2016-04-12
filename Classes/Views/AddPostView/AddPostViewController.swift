@@ -8,7 +8,6 @@
 
 import UIKit
 import CoreLocation
-import Parse
 import Photos
 
 protocol AddPostDelegate {
@@ -17,7 +16,7 @@ protocol AddPostDelegate {
 
 class AddPostViewController: UIViewController,UINavigationControllerDelegate {
   
-  var post = PostObject(text:nil,image:nil,location:nil,imageFile: nil,author:PFUser.currentUser()!,createdAt:NSDate())
+  var post = PostObject(text:nil,image:nil,location:nil,createdAt:NSDate())
   let locationManager = CLLocationManager()
   var delegate : AddPostDelegate?
   

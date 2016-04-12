@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Parse
 import CoreLocation
 
 struct PostObject{
@@ -21,23 +20,19 @@ struct PostObject{
       return nil
     }
   }
-  var imageFile : PFFile?
-  let author : PFUser
   
   var createdAt : NSDate?
   
-  static func parsedPost(object : PFObject)->PostObject{
+  static func parsedPost(object : NSDictionary)->PostObject{
     let text = object["text"] as? String
-    let imageFile = object["imageFile"] as? PFFile
     let coordinates = object["coordinates"] as? [Double]
-    let author = object["author"] as? PFUser
     
     
     let post : PostObject
     if let coord = coordinates where coord.count == 2{
-      post = PostObject(text: text, image: nil, location: CLLocationCoordinate2D(latitude: coord[0],longitude:coord[1]), imageFile: imageFile, author: author!, createdAt: object.createdAt)
+      post = PostObject(text: text, image: nil, location: CLLocationCoordinate2D(latitude: coord[0],longitude:coord[1]), createdAt: object["createdAt"] as? NSDate)
     }else{
-      post = PostObject(text: text, image: nil, location: nil, imageFile: imageFile, author: author!, createdAt: object.createdAt)
+      post = PostObject(text: text, image: nil, location: nil, createdAt: object["createdAt"] as? NSDate)
  
     }
     
@@ -46,39 +41,8 @@ struct PostObject{
   
   
   func upload(completion: (success : Bool)->Void){
-    if author.objectId == PFUser.currentUser()?.objectId{
-      let object = PFObject(className: "PostObject")
-      if let t = text{
-        object["text"] = t
-      }
-      if let location = location{
-        object["coordinates"] = [location.latitude,location.longitude]
-      }
-      
-      if let image = image{
-        let imageFile = PFFile(data: UIImageJPEGRepresentation(image, 0.5)!)
-        object["imageFile"] = imageFile
-        imageFile?.saveInBackgroundWithBlock({ (result, error) in
-          if error != nil{
-            print(error?.localizedDescription)
-            completion(success: false)
-          }else{
-            object["author"] = self.author
-            object.saveInBackgroundWithBlock({ (result, error) in
-              if error == nil{
-                completion(success: true)
-              }else{
-                completion(success: false)
-              }
-            })
-            
-          }
-        })
-      }
-    }
-    
-    
-    
   }
+  
+
 
 }

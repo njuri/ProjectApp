@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Parse
 
 struct AppStyle{
   struct Color{
@@ -28,32 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
     
-    
-    let config = ParseClientConfiguration(block: {
-      ParseMutableClientConfiguration in
-      
-      ParseMutableClientConfiguration.applicationId = "myAppId";
-      ParseMutableClientConfiguration.clientKey = "myClientKey";
-      ParseMutableClientConfiguration.server = "https://blooming-brook-97491.herokuapp.com/parse";
-      
-    });
-    
-    Parse.enableLocalDatastore()
-    Parse.initializeWithConfiguration(config);
     setupApperance()
-    
-    let vc : UIViewController
-    
-    if let _ = PFUser.currentUser(){
-      let storyboard = UIStoryboard(name: "Main", bundle: nil)
-      vc = storyboard.instantiateViewControllerWithIdentifier("tabbar")
-    }else{
-      vc = LoginViewController(nibName:"LoginViewController", bundle:nil)
-    }
-    
-    
-    self.window?.rootViewController = vc
-    self.window?.makeKeyAndVisible()
     
     return true
   }

@@ -7,11 +7,10 @@
 //
 
 import UIKit
-import ParseUI
 
 class MainProfileViewCell: UITableViewCell {
 
-  @IBOutlet weak var profileImageView: PFImageView!
+  @IBOutlet weak var profileImageView: UIImageView!
   @IBOutlet weak var editButton: UIButton!
   @IBOutlet weak var userNameField: UITextField!
   

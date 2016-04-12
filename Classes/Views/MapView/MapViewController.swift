@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import Parse
-import ParseUI
 import MapKit
 import CoreLocation
 
@@ -40,20 +38,6 @@ class MapViewController: UIViewController {
   func getPosts(){
     postsWithCoordinates.removeAll()
     
-    if let user = PFUser.currentUser(){
-      FeedClient.downloadPostsForUser(user, forProfile: false, completion: { (objects, error) in
-        if let objects = objects where error == nil{
-          for object in objects{
-            if let _ = object.location{
-              self.postsWithCoordinates.append(object)
-            }
-          }
-        }else{
-          print(error?.localizedDescription)
-        }
-        self.updateMap()
-      })
-    }
   }
   
   
@@ -103,16 +87,15 @@ extension MapViewController : MKMapViewDelegate{
     
     let mk = MKAnnotationView(annotation: annotation, reuseIdentifier: "PhotoAnnotation")
     mk.frame = CGRect(x: mk.frame.origin.x, y: mk.frame.origin.y, width: 50, height: 50)
-    let imageView = PFImageView(frame: mk.frame)
+    let imageView = UIImageView(frame: mk.frame)
     imageView.contentMode = .ScaleAspectFill
     imageView.clipsToBounds = true
     imageView.layer.masksToBounds = true
     imageView.layer.borderColor = UIColor(white: 0.4, alpha: 1).CGColor
     imageView.layer.borderWidth = 1
     imageView.layer.cornerRadius = imageView.frame.height/2
-    if let file = post.imageFile{
-      imageView.file = file
-      imageView.loadInBackground()
+    if let image = post.image{
+      imageView.image = image
     }
     
     mk.addSubview(imageView)
