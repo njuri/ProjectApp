@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       
       ParseMutableClientConfiguration.applicationId = "myAppId";
       ParseMutableClientConfiguration.clientKey = "myClientKey";
-      ParseMutableClientConfiguration.server = "https://blooming-brook-97491.herokuapp.com/parse";
+      ParseMutableClientConfiguration.server = "https://limitless-depths-74830.herokuapp.com/parse";
       
     });
     
